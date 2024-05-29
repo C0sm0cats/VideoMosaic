@@ -4,7 +4,7 @@
 This Python script, `videomosaic.py`, merges multiple video streams into a single visual mosaic. It utilizes OpenCV to read video files, resize frames, and merge them into a unified display.
 
 ## Functionality
-1. **Video Input:** The script accepts input from multiple video files specified in the `video_paths` list.
+1. **Video Input:** The script accepts input from multiple video files specified in the `video_files` list.
 2. **Video Capture:** It opens video streams using OpenCV's `VideoCapture` function for each specified video file.
 3. **Error Handling:** The script checks if the video captures are opened correctly and prints an error message if not.
 4. **Frame Resizing:** It resizes each frame to a standard size defined by `resize_width` and `resize_height`.
@@ -14,7 +14,7 @@ This Python script, `videomosaic.py`, merges multiple video streams into a singl
 8. **Resource Cleanup:** Finally, it releases the resources by closing all video captures and destroying the display window.
 
 ## Usage
-To use the script, simply specify the paths to your video files in the `video_paths` list and run the script using Python. Ensure you have the necessary libraries installed, including numpy and OpenCV.
+To use the script, simply specify the paths to your video files in the `video_files` list and run the script using Python. Ensure you have the necessary libraries installed, including numpy and OpenCV.
 
 ## Example
 Here's an example of how to run the script:

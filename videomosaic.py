@@ -8,15 +8,15 @@ import cv2
 # video_files = [f'https://{base}/{path}' for path in video_paths]
 
 # Using local .mkv video files instead
-video_paths = ['video1.mkv', 'video2.mkv', 'video3.mkv', 'video4.mkv', 'video5.mkv', 'video6.mkv']
+video_files = ['video1.mkv', 'video2.mkv', 'video3.mkv', 'video4.mkv', 'video5.mkv', 'video6.mkv']
 
 # Open video streams
-captures = [cv2.VideoCapture(path) for path in video_paths]
+captures = [cv2.VideoCapture(path) for path in video_files]
 
 # Check if captures are opened correctly
 for i, cap in enumerate(captures):
     if not cap.isOpened():
-        print(f"Error: Unable to open video {video_paths[i]}")
+        print(f"Error: Unable to open video {video_files[i]}")
 
 # Resizing dimensions
 resize_width, resize_height = 640, 480
@@ -32,7 +32,7 @@ while True:
             frames.append(np.zeros((resize_height, resize_width, 3), dtype=np.uint8))
 
     # Check if all videos have been read correctly
-    if len(frames) == len(video_paths):
+    if len(frames) == len(video_files):
         # Merge the images
         s1 = np.hstack(frames[:3])
         s2 = np.hstack(frames[3:])
