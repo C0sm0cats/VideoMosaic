@@ -16,6 +16,15 @@ This Python script, `videomosaic.py`, merges multiple video streams into a singl
 ## Usage
 To use the script, simply specify the paths to your video files in the `video_files` list and run the script using Python. Ensure you have the necessary libraries installed, including numpy and OpenCV.
 
+### Grid and Fullscreen Display
+
+- Videos are displayed in a resizable grid.
+- Clicking on a video toggles it into fullscreen mode. A second click returns to the grid display.
+
+### Mouse Callback
+
+- A mouse callback `mouse_callback` is used to handle user clicks and toggle between fullscreen and grid modes.
+
 ## Example
 Here's an example of how to run the script:
 ```bash
