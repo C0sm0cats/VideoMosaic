@@ -1,5 +1,6 @@
 import numpy as np
 import cv2
+import subprocess
 
 # List of paths to the videos
 # The following lines were for using .m3u8 video paths, uncomment and modify as needed
@@ -21,6 +22,7 @@ resize_width, resize_height = 640, 400
 fullscreen = False
 fullscreen_index = -1
 
+audio_process = None
 
 def enhance_frame(frame):
     frame_filtered = cv2.bilateralFilter(frame, 5, 50, 50)
@@ -28,24 +30,35 @@ def enhance_frame(frame):
     frame_sharpened = cv2.filter2D(frame_filtered, -1, sharpen_kernel)
     return frame_sharpened
 
-
 def mouse_callback(event, x, y, flags, param):
-    global fullscreen, fullscreen_index
+    global fullscreen, fullscreen_index, audio_process
     if event == cv2.EVENT_LBUTTONDOWN:
-        if fullscreen:
-            fullscreen = False
-            fullscreen_index = -1
-        else:
-            col = x // resize_width
-            row = y // resize_height
-            index = row * 3 + col
-            if index < len(video_files):
-                fullscreen = True
-                fullscreen_index = index
+        cols = min(3, len(valid_video_paths))
+        col = x // resize_width
+        row = y // resize_height
+        index = row * cols + col
+        if index < len(video_files):
+            if audio_process:
+                audio_process.terminate()
+                audio_process.wait()
 
+            audio_process = subprocess.Popen([
+                'vlc',
+                '--play-and-exit',
+                '--no-fullscreen',
+                '--video-x=100',
+                '--video-y=100',
+                '--width=800',
+                '--height=600',
+                video_files[index]
+            ], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 cv2.namedWindow("Result", cv2.WINDOW_NORMAL)
-cv2.resizeWindow("Result", resize_width * 3, resize_height * 2)
+
+cols = min(3, len(valid_video_paths))
+rows = (len(valid_video_paths) + 2) // 3
+cv2.resizeWindow("Result", resize_width * cols, resize_height * rows)
+
 cv2.setMouseCallback("Result", mouse_callback)
 
 while True:
@@ -54,22 +67,28 @@ while True:
         ret, frame = cap.read()
         if ret:
             frame = cv2.resize(frame, (resize_width, resize_height))
-            #frame = enhance_frame(frame)
+            # frame = enhance_frame(frame)
             frames.append(frame)
         else:
             frames.append(np.zeros((resize_height, resize_width, 3), dtype=np.uint8))
 
     if len(frames) == len(video_files):
-        if fullscreen:
-            full_frame = cv2.resize(frames[fullscreen_index], (resize_width * 4, resize_height * 4))
-            cv2.imshow("Result", full_frame)
-        else:
-            s1 = np.hstack(frames[:3])
-            s2 = np.hstack(frames[3:])
-            s3 = np.vstack((s1, s2))
-            cv2.imshow("Result", s3)
+        rows = (len(frames) + 2) // 3
+        stacked_frames = []
 
-    if cv2.waitKey(20) & 0xFF == ord('q'):
+        for r in range(rows):
+            row_frames = frames[r * 3:(r + 1) * 3]
+
+            while len(row_frames) < 3:
+                row_frames.append(np.zeros((resize_height, resize_width, 3), dtype=np.uint8))
+
+            stacked_frames.append(np.hstack(row_frames))
+
+        s3 = np.vstack(stacked_frames)
+        cv2.imshow("Result", s3)
+
+    key = cv2.waitKey(20)
+    if key & 0xFF == ord('q'):
         break
 
     if cv2.getWindowProperty('Result', cv2.WND_PROP_VISIBLE) < 1:
@@ -77,5 +96,7 @@ while True:
 
 for cap in captures:
     cap.release()
-
+if audio_process:
+    audio_process.terminate()
+    audio_process.wait()
 cv2.destroyAllWindows()
