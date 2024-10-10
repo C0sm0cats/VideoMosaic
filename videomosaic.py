@@ -72,6 +72,9 @@ while True:
     if cv2.waitKey(20) & 0xFF == ord('q'):
         break
 
+    if cv2.getWindowProperty('Result', cv2.WND_PROP_VISIBLE) < 1:
+        break
+
 for cap in captures:
     cap.release()
 
