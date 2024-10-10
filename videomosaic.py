@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 import subprocess
 
-# Fill in the base directory here
+# Fill in the base url here
 base = ""
 
 # Fill in your video file paths here (one or more)
