@@ -2,14 +2,15 @@ import numpy as np
 import cv2
 import subprocess
 
-# List of paths to the videos
-# The following lines were for using .m3u8 video paths, uncomment and modify as needed
-# base = ""
-# video_paths = ['.m3u8', '.m3u8', '.m3u8', '.m3u8', '.m3u8', '.m3u8']
-# video_files = [f'https://{base}/{path}' for path in video_paths]
+# Fill in the base directory here
+base = ""
 
-# Using local .mkv video files instead
-video_files = ['video1.mkv', 'video2.mkv', 'video3.mkv', 'video4.mkv', 'video5.mkv', 'video6.mkv']
+# Fill in your video file paths here (one or more)
+video_paths = ['.m3u8', '.m3u8', '.m3u8', '.m3u8', '.m3u8', '.m3u8']
+
+valid_video_paths = [path for path in video_paths if path != '.m3u8']
+
+video_files = [f'https://{base}/{path}' for path in valid_video_paths]
 
 captures = [cv2.VideoCapture(video) for video in video_files]
 
