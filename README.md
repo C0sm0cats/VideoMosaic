@@ -32,3 +32,5 @@ python videomosaic.py
 1. numpy
 2. OpenCV (cv2)
 3. subprocess
+
+![Alt](https://repobeats.axiom.co/api/embed/3f31f2010987926295c9bb997293de01707a3d78.svg "Repobeats analytics image")
